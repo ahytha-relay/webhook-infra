@@ -69,12 +69,6 @@ resource "aws_route_table_association" "private" {
   route_table_id = element(aws_route_table.private.*.id, count.index)
 }
 
-
-
-
-
-
-
 resource "aws_security_group" "lb" {
   name = "example-alb-security-group"
   vpc_id = aws_vpc.default.id
@@ -162,7 +156,7 @@ resource "aws_ecs_cluster" "main" {
   name = "webhook-cluster"
 }
 
-resource "aws_ecs_task_definition" "hello_world" {
+resource "aws_ecs_task_definition" "webhook-app" {
   family = "webhook-app"
   network_mode = "awsvpc"
   requires_compatibilities = ["FARGATE"]
@@ -181,15 +175,27 @@ resource "aws_ecs_task_definition" "hello_world" {
           "containerPort": 3000,
           "hostPort": 3000
         }
-      ]
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/webhook-logs",
+          "awslogs-region": "us-east-2",
+          "awslogs-stream-prefix": "webhook-event-generator"
+        }
+      }
     }
   ])
 }
 
+resource "aws_cloudwatch_log_group" "webhook_logs" {
+  name = "/ecs/webhook-logs"
+}
+
 resource "aws_ecs_service" "hello_world" {
-  name = "hello-world-service"
+  name = "webhook-service"
   cluster = aws_ecs_cluster.main.id
-  task_definition = aws_ecs_task_definition.hello_world.arn
+  task_definition = aws_ecs_task_definition.webhook-app.arn
   desired_count = var.app_count
   launch_type = "FARGATE"
 
