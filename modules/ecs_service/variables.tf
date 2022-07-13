@@ -55,3 +55,8 @@ variable "cluster_id" {
   type = string
   description = "ID of the cluster this service will run within"
 }
+
+variable "service_namespace_id" {
+  type = string
+  description = "The ID of the service namespace for discovery"
+}

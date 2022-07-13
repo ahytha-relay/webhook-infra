@@ -85,6 +85,11 @@ resource "aws_security_group" "hello_world_task" {
   }
 }
 
+resource "aws_service_discovery_private_dns_namespace" "ecs_dns_space" {
+  name = "webhookdemo.relay"
+  vpc = module.network.vpc_id
+}
+
 resource "aws_ecs_cluster" "main" {
   name = "webhook-cluster"
 }
@@ -109,6 +114,7 @@ module "ecs_service" {
   security_group_id = aws_security_group.hello_world_task.id
   target_group_id = aws_lb_target_group.hello_world.id
   cluster_id = aws_ecs_cluster.main.id
+  service_namespace_id = aws_service_discovery_private_dns_namespace.ecs_dns_space.id
 
   depends_on = [
     aws_lb_listener.hello_world
