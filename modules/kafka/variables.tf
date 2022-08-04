@@ -13,6 +13,11 @@ variable "service_namespace_id" {
   description = "The ID of the service namespace for discovery"
 }
 
+variable "service_namespace_name" {
+  type = string
+  description = "The service namespace text"
+}
+
 variable "execution_role_arn" {
   type = string
   description = "Execution role arn for the service deployment process"
