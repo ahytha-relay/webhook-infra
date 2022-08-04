@@ -121,14 +121,14 @@ module "ecs_service" {
   ]
 }
 
-module "kafka" {
-  source = "./modules/kafka"
-
-  nickname = "webhook-msgbus"
-  log_region = "us-east-2"
-  service_namespace_id = aws_service_discovery_private_dns_namespace.ecs_dns_space.id
-  service_namespace_name = "webhookdemo.relay"
-  execution_role_arn = aws_iam_role.ecs_tasks_execution_role.arn
-  private_subnet_ids = module.network.private_subnet_ids
-  cluster_id = aws_ecs_cluster.main.id
-}
+# module "kafka" {
+#  source = "./modules/kafka"
+#
+#  nickname = "webhook-msgbus"
+#  log_region = "us-east-2"
+#  service_namespace_id = aws_service_discovery_private_dns_namespace.ecs_dns_space.id
+#  service_namespace_name = "webhookdemo.relay"
+#  execution_role_arn = aws_iam_role.ecs_tasks_execution_role.arn
+#  private_subnet_ids = module.network.private_subnet_ids
+#  cluster_id = aws_ecs_cluster.main.id
+#}
